@@ -1,0 +1,110 @@
+<!doctype html>
+<html ng-app="dash">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- <link rel="stylesheet" href="css/AdminLTE.css"> -->
+    
+  </head>
+  <body>
+  	<nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Brand</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
+            <li><a href="#">Link</a></li>
+          </ul>
+          <form class="navbar-form navbar-left" role="search">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container" ng-controller="weatherCtrl">
+      <div class="row">
+        <div class="col-md-9 ">
+          <div class="panel panel-primary" ng-hide="hasLocation">
+            <div class="panel-heading">
+              Settings
+            </div>
+            <div class="panel-body">
+              <form ng-submit="setLocation()">
+                <div class="form-group">
+                  <label for="location">Enter Location</label>
+                  <input type="text" class="form-control" ng-model = "location" id="location" placeholder="Enter location">
+                </div>
+                <input type="submit" class="btn btn-default">
+              </form>
+            </div>
+          </div>
+          <div class="weather panel panel-primary">
+              <div class="panel-heading">{{parseDate(weather.dt) | date:'fullDate'}}</div>
+              <div class="panel-body">
+                  <div>
+                      <p class="lead">{{weather.name}}</p>
+                      <p class="lead">
+                          <img ng-src="{{getIconImageUrl(weather.weather[0].icon)}}" />
+                          {{weather.main.temp | number:1}}&#176;C {{weather.weather[0].main}}
+                      </p>
+                      <p>
+                          {{weather.weather[0].description}}&nbsp;&#126;&nbsp;
+                          High: {{weather.main.temp_max}}&#176;C&nbsp;&#126;&nbsp;
+                          Low: {{weather.main.temp_min}}&#176;C
+                      </p>
+                  </div>
+              </div>
+              <div class="panel-footer">
+                  <small>
+                      Pressure: {{weather.main.pressure}} hPa&nbsp;&#126;&nbsp;
+                      Humidity: {{weather.main.humidity}}%
+                  </small>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <weather-panel forecast="forecast" forecast-day="forecast.list[1]"></weather-panel>
+        </div>
+        <div class="col-md-3">
+          <weather-panel forecast="forecast" forecast-day="forecast.list[2]"></weather-panel>
+        </div>
+        <div class="col-md-3">
+          <weather-panel forecast="forecast" forecast-day="forecast.list[3]"></weather-panel>
+        </div>
+      </div>
+      
+    </div>
+
+  	<script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="app.js"></script>
+    <script src="js/controllers.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/directives.js"></script>
+  </body>
+</html>

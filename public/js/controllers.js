@@ -39,7 +39,7 @@ angular.module('dash.controllers',[])
 	});
 
 	$scope.weather = openWeatherMap.queryWeather({
-			location: newval
+			location: $scope.loc
 	});
 
 	$scope.forecast = openWeatherMap.queryForecastDaily({
@@ -55,4 +55,8 @@ angular.module('dash.controllers',[])
     $scope.parseDate = function (time) {
           return new Date(time * 1000);
     };
+}])
+
+.controller('loginCtrl', ['$scope', function($scope){
+
 }])

@@ -1,24 +1,31 @@
-<div class="weather panel panel-primary">
-    <div class="panel-heading">{{parseDate(forecastDay.dt) | date:'fullDate'}}</div>
-    <div class="panel-body">
-        <div>
-            <p class="lead">
-                <img ng-src="{{getIconImageUrl(forecastDay.weather[0].icon)}}" />
-                {{forecastDay.temp.day | number:1}}&#176;C {{forecastDay.weather[0].main}}
-            </p>
-            <p>
-                {{forecastDay.weather[0].description}}&nbsp;&#126;&nbsp;
-                High: {{forecastDay.temp.max}}&#176;C&nbsp;&#126;&nbsp;
-                Low: {{forecastDay.temp.min}}&#176;C
-            </p>
-        </div>
-    </div>
-    <div class="panel-footer">
-        <small>
-            Day: {{forecastDay.temp.day}}&#176;C&nbsp;&#126;&nbsp;
-            Night: {{forecastDay.temp.night}}&#176;C&nbsp;&#126;&nbsp;
-            Pressure: {{forecastDay.pressure}} hPa&nbsp;&#126;&nbsp;
-            Humidity: {{forecastDay.humidity}}%
-        </small>
-    </div>
-</div>
+<div class="box box-warning">
+  <div class="box-header with-border">
+    <h3 class="box-title">{{parseDate(forecastDay.dt) | date:'fullDate'}}</h3>
+    <div class="box-tools pull-right">
+      <!-- Buttons, labels, and many other things can be placed here! -->
+      <!-- Here is a label for example -->
+      <span class="label label-primary">{{forecast.city.name}}</span>
+    </div><!-- /.box-tools -->
+  </div><!-- /.box-header -->
+  <div class="box-body">
+    <!-- <p class="lead">{{forecastDay.name}}</p> -->
+    <p class="lead">
+      <img ng-src="{{getIconImageUrl(forecastDay.weather[0].icon)}}" />
+      {{forecastDay.temp.day | number:1}}&#176;C {{forecastDay.weather[0].main}}
+    </p>
+    <p>
+      {{forecastDay.weather[0].description}}&nbsp;&#126;&nbsp;
+       High: {{forecastDay.temp.max}}&#176;C&nbsp;&#126;&nbsp;
+       Low: {{forecastDay.temp.min}}&#176;C
+    </p>
+  </div><!-- /.box-body -->
+  <div class="box-footer">
+    <small>
+        Day: {{forecastDay.temp.day}}&#176;C&nbsp;&#126;&nbsp;
+        Night: {{forecastDay.temp.night}}&#176;C&nbsp;&#126;&nbsp;
+        Pressure: {{forecastDay.pressure}} hPa&nbsp;&#126;&nbsp;
+        Humidity: {{forecastDay.humidity}}%
+    </small>
+  </div><!-- box-footer -->
+</div><!-- /.box -->
+

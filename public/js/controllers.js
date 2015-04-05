@@ -2,7 +2,7 @@
 
 angular.module('dash.controllers',[])
 
-.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'setLocation', 'getLocationSetting', 'checkLocation', function($scope, openWeatherMap, setLocation, getLocationSetting, checkLocation){
+.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting',  function($scope, openWeatherMap, getLocationSetting){
 
 	// if (navigator.geolocation) {
  //        navigator.geolocation.getCurrentPosition(function(position){
@@ -11,14 +11,9 @@ angular.module('dash.controllers',[])
  //    } else {
  //        console.log("Geolocation is not supported by this browser.");
  //    }
- 	$scope.hasLocation = checkLocation();
+ 	
 
- 	$scope.setLocation = function(){
-
- 		setLocation($scope.location);
- 		$scope.hasLocation = true;
- 		$scope.loc = $scope.location;
- 	}
+ 	
  	// console.log(getLocationSetting());
  	$scope.loc = getLocationSetting();
 
@@ -59,4 +54,16 @@ angular.module('dash.controllers',[])
 
 .controller('loginCtrl', ['$scope', function($scope){
 
+}])
+
+.controller('settingsCtrl', ['$scope', 'setLocation', 'checkLocation', 'getLocationSetting', function($scope, setLocation, checkLocation, getLocationSetting){
+
+	if(checkLocation()){
+		$scope.message = "Location currently set is " + getLocationSetting();
+	}
+
+	$scope.setLocation = function(){
+ 		setLocation($scope.location);
+ 		$scope.success="Your settings saved successfully";
+ 	}
 }])

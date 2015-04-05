@@ -16,15 +16,8 @@
     <!-- <link rel="stylesheet" href="css/AdminLTE.css"> -->
     
   </head>
-  <body class="skin-blue sidebar-collapse fixed">
-    <div class="wrapper">
-      <ng-include src="'partials/header.html'" scope="" onload=""></ng-include>
-      <ng-include src="'partials/sidebar.html'" scope="" onload=""></ng-include>
-      <div class="content-wrapper">
-        <ui-view ></ui-view>
-      </div>
-    </div>
-  	
+  <body class="skin-blue">
+    <ui-view ></ui-view>
     
 <!-- todo: convert all js files to its minfied version -->
   	<script src="bower_components/jquery/dist/jquery.js"></script>
@@ -32,6 +25,7 @@
     <script src="bower_components/angular-resource/angular-resource.js"></script>
      <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="js/app.jquery.js"></script>
     <script src="app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>

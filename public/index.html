@@ -17,8 +17,15 @@
     
   </head>
   <body class="skin-blue">
-    <ui-view ></ui-view>
-    
+    <div class="wrapper">
+      <!-- header -->
+      <div ui-view="header"></div>
+      <!-- sidebar -->
+      <div ui-view="sidebar"></div>
+      <!-- content -->
+      <div ui-view="content"></div>
+    </div>
+
 <!-- todo: convert all js files to its minfied version -->
   	<script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>

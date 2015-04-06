@@ -3,24 +3,48 @@
 angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives'])
 
 .config(function($stateProvider, $urlRouterProvider){
-	$urlRouterProvider.otherwise("/login");	
+	$urlRouterProvider.otherwise("/");	
 
 	$stateProvider
-		.state('login',{
-			url: '/login',
-			templateUrl: 'partials/login.html',
-			controller: 'loginCtrl'
-		})
-		.state('settings',{
-			url: '/settings',
-			templateUrl: 'partials/settings.html',
-			controller: 'settingsCtrl'
-		})
 		.state('dash',{
-			url: '/dash',
-			templateUrl: 'partials/dash.html',
-			controller: 'weatherCtrl'
-		});
+			url: '/',
+			views: {
+				'header': {
+					templateUrl : 'partials/header.html'
+				},
+				'sidebar': {
+					templateUrl: 'partials/sidebar.html'
+				},
+				'content': {
+					templateUrl: 'partials/dash.html',
+					controller: 'weatherCtrl'
+				}
+			}
+		})
+		.state('dash.settings',{
+			url:'settings',
+			views: {
+				'content@': {
+					templateUrl: 'partials/settings.html',
+					controller: 'settingsCtrl'
+				}
+			}
+		})
+		.state('dash.login',{
+			url:'login',
+			views: {
+				'header@' : {
+
+				},
+				'sidebar@': {
+
+				},
+				'content@': {
+					templateUrl: 'partials/login.html',
+					controller: 'loginCtrl'
+				}
+			}
+		})
 })
 
 .run(function($rootScope, $location){

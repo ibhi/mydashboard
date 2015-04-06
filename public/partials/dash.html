@@ -1,63 +1,64 @@
-<div class="wrapper">
-  <ng-include src="'partials/header.html'" scope="" onload=""></ng-include>
-  <ng-include src="'partials/sidebar.html'" scope="" onload=""></ng-include>
-  <div class="content-wrapper">
-    <section class="content-header">
-      <h1>
-        My Dashboard
-        <small>Version 1.0</small>
-      </h1>
-      <!-- <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dashboard</li>
-      </ol> -->
-    </section>
+<div class="content-wrapper">
+  <section class="content-header">
+    <h1>
+      My Dashboard
+      <small>Version 1.0</small>
+    </h1>
+    <!-- <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">Dashboard</li>
+    </ol> -->
+  </section>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="box box-warning">
-            <div class="box-header with-border">
-              <h3 class="box-title">{{parseDate(weather.dt) | date:'fullDate'}}</h3>
-              <div class="box-tools pull-right">
-                <!-- Buttons, labels, and many other things can be placed here! -->
-                <!-- Here is a label for example -->
-                <span class="label label-primary">{{weather.name}}</span>
-              </div><!-- /.box-tools -->
-            </div><!-- /.box-header -->
-            <div class="box-body">
-              <!-- <p class="lead">{{weather.name}}</p> -->
-              <p class="lead">
-                <img ng-src="{{getIconImageUrl(weather.weather[0].icon)}}" />
-                <b>{{weather.main.temp | number:1}}&#176;C {{weather.weather[0].main}}</b>
-              </p>
-              <p>
-                {{weather.weather[0].description}}&nbsp;&#126;&nbsp;
-                High: {{weather.main.temp_max}}&#176;C&nbsp;&#126;&nbsp;
-                Low: {{weather.main.temp_min}}&#176;C
-              </p>
-            </div><!-- /.box-body -->
-            <div class="box-footer">
-              <small>
-                Pressure: {{weather.main.pressure}} hPa&nbsp;&#126;&nbsp;
-                Humidity: {{weather.main.humidity}}%
-              </small>
-            </div><!-- box-footer -->
-          </div><!-- /.box -->
-        </div>
-        <div class="col-md-3">
-          <weather-panel forecast="forecast" forecast-day="forecast.list[1]"></weather-panel>
-        </div>
-        <div class="col-md-3">
-          <weather-panel forecast="forecast" forecast-day="forecast.list[2]"></weather-panel>
-        </div>
-        <div class="col-md-3">
-          <weather-panel forecast="forecast" forecast-day="forecast.list[3]"></weather-panel>
-        </div>
+  <!-- Main content -->
+  <section class="content">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3 class="box-title">{{parseDate(weather.dt) | date:'fullDate'}}</h3>
+            <div class="box-tools pull-right">
+              <!-- Buttons, labels, and many other things can be placed here! -->
+              <!-- Here is a label for example -->
+              <span class="label label-primary">{{weather.name}}</span>
+            </div><!-- /.box-tools -->
+          </div><!-- /.box-header -->
+          <div class="box-body">
+            <!-- <p class="lead">{{weather.name}}</p> -->
+            <p class="lead">
+              <img ng-src="{{getIconImageUrl(weather.weather[0].icon)}}" />
+              <b>{{weather.main.temp | number:1}}&#176;C {{weather.weather[0].main}}</b>
+            </p>
+            <p>
+              {{weather.weather[0].description}}&nbsp;&#126;&nbsp;
+              High: {{weather.main.temp_max}}&#176;C&nbsp;&#126;&nbsp;
+              Low: {{weather.main.temp_min}}&#176;C
+            </p>
+          </div><!-- /.box-body -->
+          <div class="box-footer">
+            <small>
+              Pressure: {{weather.main.pressure}} hPa&nbsp;&#126;&nbsp;
+              Humidity: {{weather.main.humidity}}%
+            </small>
+          </div><!-- box-footer -->
+        </div><!-- /.box -->
       </div>
-    </section> 
-  </div>
+      <div class="col-md-3">
+        <weather-panel forecast="forecast" forecast-day="forecast.list[1]"></weather-panel>
+      </div>
+      <div class="col-md-3">
+        <weather-panel forecast="forecast" forecast-day="forecast.list[2]"></weather-panel>
+      </div>
+      <div class="col-md-3">
+        <weather-panel forecast="forecast" forecast-day="forecast.list[3]"></weather-panel>
+      </div>
+    </div>
+
+    <!-- Slider widget -->
+    <div class="row">
+      <div class="col-md-10 col-md-offset-1">
+        <ng-include src="'partials/slider.html'" scope="" onload=""></ng-include>
+      </div>
+    </div>
+  </section> 
 </div>
-
-

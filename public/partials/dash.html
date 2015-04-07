@@ -56,8 +56,23 @@
 
     <!-- Slider widget -->
     <div class="row">
-      <div class="col-md-10 col-md-offset-1">
-        <ng-include src="'partials/slider.html'" scope="" onload=""></ng-include>
+      <div class="col-md-6">
+        <div class="box box-primary">
+          <div class="box-body no-padding">
+            <div ui-calendar ng-model="eventSources"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="box box-warning">
+          <div class="box-header with-border">
+            <h3>My Awesome Photos</h3>
+          </div>
+          <div class="box-body no-padding">
+            <ng-include src="'partials/slider.html'" scope="" onload=""></ng-include>
+          </div>
+        </div>
+        
       </div>
     </div>
   </section> 

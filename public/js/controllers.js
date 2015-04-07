@@ -50,6 +50,10 @@ angular.module('dash.controllers',[])
     $scope.parseDate = function (time) {
           return new Date(time * 1000);
     };
+
+    // Calendar
+
+    $scope.eventSources = [];
 }])
 
 .controller('loginCtrl', ['$scope', function($scope){

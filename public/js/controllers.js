@@ -57,7 +57,7 @@ angular.module('dash.controllers',[])
 
     //Dropbox
 
-    $scope.imgSrc = [];
+    $scope.slides = [];
 
     var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
 
@@ -89,15 +89,21 @@ angular.module('dash.controllers',[])
                 console.log('Error reading directory ' + path);
                 return;
             }
+            // console.log(entries_stat);
+
             // console.log(entries, stat, entries_stat);
             for (var i = entries_stat.length - 1; i >= 0; i--) {
                 console.log('Path: ' + entries_stat[i].path);
                 client.readFile(entries_stat[i].path, {arrayBuffer: true}, function(error, data, stat, rangeinfo){
+                    // console.log(stat);
                     blobUtil.arrayBufferToBlob(data,"image/jpeg").then(
                       function(blob){
                           var imageUrl = blobUtil.createObjectURL(blob);
-                          $scope.imgSrc.push(imageUrl) ;
-                          console.log($scope.imgSrc)
+                          var testImage = new Image();
+                          testImage.src=imageUrl;
+                          console.log(testImage.height);
+                          $scope.slides.push({image: imageUrl});
+                          console.log($scope.slides)
                       },function(error){
                           console.log(error);
                       }
@@ -111,7 +117,8 @@ angular.module('dash.controllers',[])
 
     // Slider
 
-    $scope.myInterval = 1000;
+    $scope.myInterval = 2000;
+    
 
     // Dropbox.authenticate().then(
     //     function(result){

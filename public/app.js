@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar'])
+angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap'])
 
 .config(function($stateProvider, $urlRouterProvider){
 	$urlRouterProvider.otherwise("/");	

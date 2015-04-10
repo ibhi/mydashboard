@@ -81,3 +81,90 @@ angular.module('dash.services',['ngResource'])
 		return false;
 	};
 }])
+
+.service('dropboxClient', function($q){
+  
+
+  
+
+  // var _client;
+
+  var getDropboxClient = function(){
+    // return _client;
+    return JSON.parse(localStorage.getItem('dropboxClient'));
+  };
+
+  var setDropboxClient = function(client){
+    // _client = client;
+    localStorage.setItem('dropboxClient', JSON.stringify(client));
+    console.log('Client successfully set in local storage');
+  }
+
+    // client.authDriver(new Dropbox.AuthDriver.Cordova());
+  
+
+  var authenticate = function(client){
+    var q = $q.defer();
+  client.authenticate({interactive: false},function(error, client) {
+      if (error) {
+        q.reject(error);
+      }
+      if(client.isAuthenticated()){
+        q.resolve(client);        
+      }
+      else{
+        client.authenticate(function(error, client){
+          if(error){
+            q.reject(error)
+          }
+          q.resolve(client);
+        })     
+      }
+
+    });
+
+    return q.promise;
+  };
+  
+  var getAccountInfo = function(){
+    var q = $q.defer();
+    client.getAccountInfo(function(error, accountInfo) {
+        if (error) {
+            q.reject(error);
+        }
+    q.resolve(accountInfo);         
+    });
+    return q.promise;
+  };
+
+  var readdir = function(client, path, options){
+    var q= $q.defer();
+    client.readdir(path, options, function(error, entries, stat, entries_stat){
+      if(error){
+        q.reject(error);
+      }
+      q.resolve([entries, stat, entries_stat]);
+    })
+    return q.promise;
+  };
+
+  var readFile = function(client, path,options){
+    var q = $q.defer();
+    client.readFile(path,options, function(error, data, stat, rangeinfo){
+      if(error){
+        q.reject(error);
+      }
+      q.resolve([data, stat, rangeinfo]);
+    })
+    return q.promise;
+  }
+
+    return {
+      getDropboxClient: getDropboxClient,
+      setDropboxClient: setDropboxClient,
+      authenticate: authenticate,
+      getAccountInfo: getAccountInfo,
+      readdir: readdir,
+      readFile: readFile
+    };
+})

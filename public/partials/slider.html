@@ -7,20 +7,18 @@
   </ol> -->
 
   <!-- Wrapper for slides -->
-  <div class="carousel-inner" role="listbox" height="500px" width="500px">
-    <div class="item active">
+  <div class="carousel-inner" role="listbox" >
+    
+    <div class="item" ng-repeat="imgUrl in imgSrc" ng-class="{active: $first}">
+      <img ng-src="{{imgUrl}}" >
+    </div>
+
+    <!-- <div class="item active">
       <img src="img/photo1.png" alt="...">
-      <div class="carousel-caption">
-        ...
-      </div>
     </div>
     <div class="item">
       <img src="img/photo2.png" alt="...">
-      <div class="carousel-caption">
-        ...
-      </div>
-    </div>
-    ...
+    </div> -->
   </div>
 
   <!-- Controls -->

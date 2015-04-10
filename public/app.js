@@ -44,7 +44,9 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 					controller: 'loginCtrl'
 				}
 			}
-		})
+		});
+
+	// DropboxProvider.config('vb60si76xhcnr42', 'http://localhost:3000/callback.html');	
 })
 
 .run(function($rootScope, $location){

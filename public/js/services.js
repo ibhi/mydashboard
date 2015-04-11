@@ -59,7 +59,7 @@ angular.module('dash.services',['ngResource'])
 			console.log(localStorage.getItem('location'));
 			return localStorage.getItem('location')
 		}
-		return null;
+		return 'Chennai';
 	};
 }])
 

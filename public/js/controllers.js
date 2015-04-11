@@ -203,7 +203,58 @@ angular.module('dash.controllers',[])
     //     }
     // );
 
+    var CLIENT_ID = '707496747102-5kn3srn6rsnpepr66mi0ng49v21vus5i.apps.googleusercontent.com';
+    var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+
+    $scope.visible = true;
+
+    $scope.authenticate = function(){
+        gapi.auth.authorize({
+            'client_id': CLIENT_ID,
+            'scope': SCOPES,
+            'immediate': false
+        }, handleAuthResult)
+    }
+
+   
     
+    function handleAuthResult(authResult){
+        if(authResult && !authResult.error){
+            $scope.visible = false;
+            console.log('Application authroized');
+            loadCalendarApi();
+        }
+        else{
+            console.log('Application not yet authorized');
+            $scope.visible = true;
+        }
+    }
+
+    function loadCalendarApi(){
+        gapi.client.load('calendar', 'v3', listUpcomingEvents);
+    }
+
+    function listUpcomingEvents(){
+        var request = gapi.client.calendar.events.list({
+            'calendarId': 'primary',
+            'timeMin': (new Date()).toISOString(),
+            'showDeleted': false,
+            'singleEvents': true,
+            'maxResults': 20,
+            'orderBy': 'startTime'
+        });
+
+        request.execute(function (res){
+            console.log(res.items);
+            fullCal(res.items);
+        });
+
+
+    }
+
+    function fullCal(events){
+
+    }
 
 }])
 
@@ -218,7 +269,7 @@ angular.module('dash.controllers',[])
 	}
 
 	$scope.setLocation = function(){
- 		setLocation($scope.location);
+ 		setLocation($scope.location || 'Chennai');
  		$scope.success="Your settings saved successfully";
  	}
 }])

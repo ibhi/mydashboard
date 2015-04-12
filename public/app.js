@@ -1,8 +1,8 @@
 'use strict';
 
-angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap'])
+angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox'])
 
-.config(function($stateProvider, $urlRouterProvider){
+.config(function($stateProvider, $urlRouterProvider, DropboxProvider){
 	$urlRouterProvider.otherwise("/");	
 
 	$stateProvider
@@ -47,7 +47,7 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 			}
 		});
 
-	// DropboxProvider.config('vb60si76xhcnr42', 'http://localhost:3000/callback.html');	
+	DropboxProvider.config('vb60si76xhcnr42', 'http://localhost:3000/oauth_receiver.html');	
 })
 
 .run(function($rootScope, $location){

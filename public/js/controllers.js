@@ -2,7 +2,7 @@
 
 angular.module('dash.controllers',[])
 
-.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', function($scope, openWeatherMap, getLocationSetting){
+.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', 'Dropbox', function($scope, openWeatherMap, getLocationSetting, Dropbox){
 
 	// if (navigator.geolocation) {
  //        navigator.geolocation.getCurrentPosition(function(position){
@@ -51,7 +51,7 @@ angular.module('dash.controllers',[])
           return new Date(time * 1000);
     };
 
-    // Calendar
+    // fullCalendar
 
     $scope.eventSources = [];
 
@@ -59,60 +59,94 @@ angular.module('dash.controllers',[])
 
     $scope.slides = [];
 
-    var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
+    Dropbox.init();
 
-    client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "http://localhost:3000/oauth_receiver.html"}));
-
-    client.authenticate({interactive: false}, function(error, client){
-        if (error) {
-            console.log('Authentication Error')
-        }
-        if (client.isAuthenticated()) {
-            // Cached credentials are available, make Dropbox API calls.
-            console.log('client is already authenticated' );
-            imgSrc(client, '/Test')
-        } else {
-            // show and set up the "Sign into Dropbox" button
-            client.authenticate(function(error, client) {
-                if (error) {
-                  console.log('Authentication Error');
-                }
-                console.log('Authentication successful');
-                imgSrc(client, '/Test')
-            });
-        }
+    Dropbox.readdir('/Test').then(function(response){
+        var entries, stat, entries_stat;
+        entries = response[0];
+        stat = response[1];
+        entries_stat = response[2];
+        console.log(entries);
+        readFiles(entries, stat, entries_stat);
+    }, function(error){
+        console.log(error);
     });
 
-    function imgSrc(client, path){
-        client.readdir(path, function(error, entries, stat, entries_stat){
-            if(error){
-                console.log('Error reading directory ' + path);
-                return;
-            }
-            // console.log(entries_stat);
+    var readFiles = function(entries, stat, entries_stat){
+        for (var i = 0; i < entries_stat.length; i++) {
+            var filePath = entries_stat[i].path;
+            Dropbox.readFile(filePath, {arrayBuffer: true}).then(function(data, stat, rangeinfo){
+                prepareBlobs(data);
+            }, function(error){
+                console.log(error);
+            })
+        };
+    };
 
-            // console.log(entries, stat, entries_stat);
-            for (var i = entries_stat.length - 1; i >= 0; i--) {
-                console.log('Path: ' + entries_stat[i].path);
-                client.readFile(entries_stat[i].path, {arrayBuffer: true}, function(error, data, stat, rangeinfo){
-                    // console.log(stat);
-                    blobUtil.arrayBufferToBlob(data,"image/jpeg").then(
-                      function(blob){
-                          var imageUrl = blobUtil.createObjectURL(blob);
-                          var testImage = new Image();
-                          testImage.src=imageUrl;
-                          console.log(testImage.height);
-                          $scope.slides.push({image: imageUrl});
-                          console.log($scope.slides)
-                      },function(error){
-                          console.log(error);
-                      }
-                     );
-                })
-            };
-
-        })
+    var prepareBlobs = function(data){
+        blobUtil.arrayBufferToBlob(data,"image/jpeg").then(function(blob){
+            var imageUrl = blobUtil.createObjectURL(blob);
+            $scope.slides.push({image: imageUrl});
+            console.log($scope.slides)
+        }, function(error){
+            console.log(error);
+        });
     }
+
+    // var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
+
+    // client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "http://localhost:3000/oauth_receiver.html"}));
+
+    // client.authenticate({interactive: false}, function(error, client){
+    //     if (error) {
+    //         console.log('Authentication Error')
+    //     }
+    //     if (client.isAuthenticated()) {
+    //         // Cached credentials are available, make Dropbox API calls.
+    //         console.log('client is already authenticated' );
+    //         imgSrc(client, '/Test')
+    //     } else {
+    //         // show and set up the "Sign into Dropbox" button
+    //         client.authenticate(function(error, client) {
+    //             if (error) {
+    //               console.log('Authentication Error');
+    //             }
+    //             console.log('Authentication successful');
+    //             imgSrc(client, '/Test')
+    //         });
+    //     }
+    // });
+
+    // function imgSrc(client, path){
+    //     client.readdir(path, function(error, entries, stat, entries_stat){
+    //         if(error){
+    //             console.log('Error reading directory ' + path);
+    //             return;
+    //         }
+    //         // console.log(entries_stat);
+
+    //         // console.log(entries, stat, entries_stat);
+    //         for (var i = entries_stat.length - 1; i >= 0; i--) {
+    //             console.log('Path: ' + entries_stat[i].path);
+    //             client.readFile(entries_stat[i].path, {arrayBuffer: true}, function(error, data, stat, rangeinfo){
+    //                 // console.log(stat);
+    //                 blobUtil.arrayBufferToBlob(data,"image/jpeg").then(
+    //                   function(blob){
+    //                       var imageUrl = blobUtil.createObjectURL(blob);
+    //                       var testImage = new Image();
+    //                       testImage.src=imageUrl;
+    //                       console.log(testImage.height);
+    //                       $scope.slides.push({image: imageUrl});
+    //                       console.log($scope.slides)
+    //                   },function(error){
+    //                       console.log(error);
+    //                   }
+    //                  );
+    //             })
+    //         };
+
+    //     })
+    // }
 
 
     // Slider
@@ -120,88 +154,7 @@ angular.module('dash.controllers',[])
     $scope.myInterval = 2000;
     
 
-    // Dropbox.authenticate().then(
-    //     function(result){
-    //         console.log(result);
-    //         // Dropbox.accountInfo().then(
-    //         //     function(result){
-    //         //         console.log(result);
-    //         //     }, function(error){
-    //         //         console.log(error);
-    //         //     }
-    //         // )
-
-    //     }, function(error){
-    //         console.log(error);
-    //     }
-    // )
-    // Dropbox.accountInfo().then(
-    //     function(result){
-    //         console.log(result);
-    //     }, function(error){
-    //         console.log(error);
-    //     }
-    // )
-    // console.log(Dropbox.accountInfo());
-
-    // var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
-
-    // var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
-
-    // client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "http://localhost:3000/oauth_receiver.html"}));
-
-    // $scope.authenticate = function(){
-    // 	dropboxClient.authenticate(client).then(
-    // 		function(client){
-    // 	    	dropboxClient.setDropboxClient(client);
-    // 	    	// console.log(dropboxClient.getDropboxClient());
-    // 	    	// dropboxClient.readdir('/Test').then(
-    // 	    	// 	function(entries, stat, entries_stat){
-    // 	    	// 		console.log(entries[0],entries[1],entries[2] );
-    // 	    	// 	},function(error){
-    // 	    	// 		console.log(error);
-    // 	    	// 	}
-    // 	    	// );
-    // 	    	// dropboxClient.readFile('/Test/IMG004.jpg', { arrayBuffer: true}).then(
-    // 	    	// 	function(data, stat,rangeinfo){
-	   //  			  //   console.log(data[0]);
-	   //  			  //   blobUtil.arrayBufferToBlob(data[0],"image/jpeg").then(
-	   //  			  //   	function(blob){
-	   //  			  //   		var imageUrl = blobUtil.createObjectURL(blob);
-	   //  			  //   		$scope.imgSrc = imageUrl;
-    //       //                       console.log($scope.imgSrc)
-	   //  			  //   		console.log("Success" + imageUrl)
-	   //  			  //   	},function(error){
-	   //  			  //   		console.log(error);
-	   //  			  //   	}
-	   //  			  //   );
-	    			    
-
-	    			    
-
-    // 	    	// 	},function(error){
-    // 	    	// 		console.log(error);
-    // 	    	// 	}
-    // 	    	// );
-    // 	  	}, function(error){
-    // 	    	console.log(error);
-    // 	  	}
-    // 	);
-    // }
-
-    // client = dropboxClient.getDropboxClient();
-    // console.log(client);
-    // dropboxClient.readdir(client, '/Test').then(
-    //     function(entries, stat, entries_stat){
-    //         var entries = result[0],
-    //         stat = result[1],
-    //         entries_stat=result[2];
-
-    //         console.log(entries, stat, entries_stat );
-    //     },function(error){
-    //         console.log(error);
-    //     }
-    // );
+    
 
     var CLIENT_ID = '707496747102-5kn3srn6rsnpepr66mi0ng49v21vus5i.apps.googleusercontent.com';
     var SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];

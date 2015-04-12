@@ -2,7 +2,7 @@
 
 angular.module('dash.controllers',[])
 
-.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', 'Dropbox', function($scope, openWeatherMap, getLocationSetting, Dropbox){
+.controller('dashCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', 'Dropbox', function($scope, openWeatherMap, getLocationSetting, Dropbox){
 
 	// if (navigator.geolocation) {
  //        navigator.geolocation.getCurrentPosition(function(position){
@@ -59,17 +59,22 @@ angular.module('dash.controllers',[])
 
     $scope.slides = [];
 
-    Dropbox.init();
+    Dropbox.init().then(function(){
+        // Auhentication succesfull
+    }, function(error){
+        showError(error);
+    })
 
     Dropbox.readdir('/Test').then(function(response){
         var entries, stat, entries_stat;
         entries = response[0];
         stat = response[1];
         entries_stat = response[2];
-        console.log(entries);
+        // console.log(entries);
         readFiles(entries, stat, entries_stat);
     }, function(error){
         console.log(error);
+        showError(error);
     });
 
     var readFiles = function(entries, stat, entries_stat){
@@ -79,6 +84,7 @@ angular.module('dash.controllers',[])
                 prepareBlobs(data);
             }, function(error){
                 console.log(error);
+                showError(error);
             })
         };
     };
@@ -93,61 +99,56 @@ angular.module('dash.controllers',[])
         });
     }
 
-    // var client = new Dropbox.Client({ key: "vb60si76xhcnr42" });
+    var showError = function(error) {
+        switch (error.status) {
+        case Dropbox.ApiError.INVALID_TOKEN:
+            // If you're using dropbox.js, the only cause behind this error is that
+            // the user token expired.
+            // Get the user through the authentication flow again.
+            console.log("If you're using dropbox.js, the only cause behind this error is that the user token expired. Get the user through the authentication flow again.")
+            break;
 
-    // client.authDriver(new Dropbox.AuthDriver.Popup({receiverUrl: "http://localhost:3000/oauth_receiver.html"}));
+        case Dropbox.ApiError.NOT_FOUND:
+            // The file or folder you tried to access is not in the user's Dropbox.
+            // Handling this error is specific to your application.
+            console.log('The file or folder you tried to access is not in the user\'s Dropbox');
+            break;
 
-    // client.authenticate({interactive: false}, function(error, client){
-    //     if (error) {
-    //         console.log('Authentication Error')
-    //     }
-    //     if (client.isAuthenticated()) {
-    //         // Cached credentials are available, make Dropbox API calls.
-    //         console.log('client is already authenticated' );
-    //         imgSrc(client, '/Test')
-    //     } else {
-    //         // show and set up the "Sign into Dropbox" button
-    //         client.authenticate(function(error, client) {
-    //             if (error) {
-    //               console.log('Authentication Error');
-    //             }
-    //             console.log('Authentication successful');
-    //             imgSrc(client, '/Test')
-    //         });
-    //     }
-    // });
+        case Dropbox.ApiError.OVER_QUOTA:
+            // The user is over their Dropbox quota.
+            // Tell them their Dropbox is full. Refreshing the page won't help.
+            console.log('User is over their Dropbox quota');
+            break;
 
-    // function imgSrc(client, path){
-    //     client.readdir(path, function(error, entries, stat, entries_stat){
-    //         if(error){
-    //             console.log('Error reading directory ' + path);
-    //             return;
-    //         }
-    //         // console.log(entries_stat);
+        case Dropbox.ApiError.RATE_LIMITED:
+            // Too many API requests. Tell the user to try again later.
+            // Long-term, optimize your code to use fewer API calls.
+            console.log('Too many API requests');
+            break;
 
-    //         // console.log(entries, stat, entries_stat);
-    //         for (var i = entries_stat.length - 1; i >= 0; i--) {
-    //             console.log('Path: ' + entries_stat[i].path);
-    //             client.readFile(entries_stat[i].path, {arrayBuffer: true}, function(error, data, stat, rangeinfo){
-    //                 // console.log(stat);
-    //                 blobUtil.arrayBufferToBlob(data,"image/jpeg").then(
-    //                   function(blob){
-    //                       var imageUrl = blobUtil.createObjectURL(blob);
-    //                       var testImage = new Image();
-    //                       testImage.src=imageUrl;
-    //                       console.log(testImage.height);
-    //                       $scope.slides.push({image: imageUrl});
-    //                       console.log($scope.slides)
-    //                   },function(error){
-    //                       console.log(error);
-    //                   }
-    //                  );
-    //             })
-    //         };
+        case Dropbox.ApiError.NETWORK_ERROR:
+            // An error occurred at the XMLHttpRequest layer.
+            // Most likely, the user's network connection is down.
+            // API calls will not succeed until the user gets back online.
+            console.log('May be your internet is down');
+            break;
 
-    //     })
-    // }
+        case Dropbox.ApiError.INVALID_PARAM:
+            console.log('You have passed some invalid parameters');
+            break;
+        case Dropbox.ApiError.OAUTH_ERROR:
+            console.log('Authorization error');
+            break;
+        case Dropbox.ApiError.INVALID_METHOD:
+            console.log('There is no such method');
+            break;
+        default:
+            // Caused by a bug in dropbox.js, in your application, or in Dropbox.
+            // Tell the user an error occurred, ask them to refresh the page.
+        }
+      };
 
+    
 
     // Slider
 

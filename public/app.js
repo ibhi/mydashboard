@@ -18,7 +18,7 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 				},
 				'content': {
 					templateUrl: 'partials/dash.html',
-					controller: 'weatherCtrl'
+					controller: 'dashCtrl'
 				}
 			}
 		})

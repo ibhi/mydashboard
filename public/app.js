@@ -10,7 +10,8 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 			url: '/',
 			views: {
 				'header': {
-					templateUrl : 'partials/header.html'
+					templateUrl : 'partials/header.html',
+					controller: 'headerCtrl'
 				},
 				'sidebar': {
 					templateUrl: 'partials/sidebar.html'

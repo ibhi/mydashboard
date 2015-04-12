@@ -302,3 +302,7 @@ angular.module('dash.controllers',[])
  		$scope.success="Your settings saved successfully";
  	}
 }])
+
+.controller('headerCtrl', ['$scope', function($scope){
+    
+}])

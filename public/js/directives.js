@@ -10,7 +10,7 @@ angular.module('dash.directives',[])
 			forecastDay:'='
 		},
 
-		link: function(scope, el, attr){
+		link: function(scope, element, attrs){
 			scope.getIconImageUrl = function(iconName) {
 		      return (iconName ? 'http://openweathermap.org/img/w/' + iconName + '.png' : '');
 		    };
@@ -20,4 +20,17 @@ angular.module('dash.directives',[])
 			
 		}
 	};
-}]);
+}])
+
+.directive('toggleClass', function() {
+    return {
+        restrict: 'A',
+        link: function(scope, element, attrs) {
+            element.bind('click', function() {
+                // element.toggleClass(attrs.toggleClass);
+                console.log('Toggle button clicked');
+                element.parents('body').toggleClass(attrs.toggleClass)
+            });
+        }
+    };
+});

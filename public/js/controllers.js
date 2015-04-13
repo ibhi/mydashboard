@@ -3,6 +3,8 @@
 angular.module('dash.controllers',[])
 
 .controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', function($scope, openWeatherMap, getLocationSetting){
+    
+    $scope.currentTime = moment().format('h:mm a');
     $scope.loc = getLocationSetting();
 
     console.log($scope.loc);
@@ -29,7 +31,7 @@ angular.module('dash.controllers',[])
             location: $scope.loc
     });
 
-    // console.log($scope.weather);
+    console.log($scope.weather);
     console.log($scope.forecast);
 
     $scope.getIconImageUrl = function(iconName) {
@@ -38,6 +40,10 @@ angular.module('dash.controllers',[])
     $scope.parseDate = function (time) {
           return new Date(time * 1000);
     };
+    $scope.parseDay = function(time){
+        var date = moment(time * 1000);
+        return date.format('ddd');
+    }
 
 }])
 

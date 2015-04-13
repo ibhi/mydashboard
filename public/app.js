@@ -3,44 +3,63 @@
 angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox'])
 
 .config(function($stateProvider, $urlRouterProvider, DropboxProvider){
-	$urlRouterProvider.otherwise("/");	
+	$urlRouterProvider.otherwise("/dash");	
 
 	$stateProvider
-		.state('dash',{
-			url: '/',
-			views: {
-				'header': {
-					templateUrl : 'partials/header.html',
-					controller: 'headerCtrl'
+		.state('app',{
+			abstract: true,
+			views:{
+				'':{
+					templateUrl: 'partials/layout.html'
 				},
-				'sidebar': {
+				'header@app': {
+					templateUrl: 'partials/header.html'
+				},
+				'sidebar@app': {
 					templateUrl: 'partials/sidebar.html'
+				}
+			}
+		})
+		.state('dash',{
+			url: '/dash',
+			parent: 'app', 
+			views: {
+				'': {
+					templateUrl: 'partials/dash-layout.html'
 				},
-				'content': {
+				'content@dash': {
 					templateUrl: 'partials/dash.html',
 					controller: 'dashCtrl'
 				}
 			}
 		})
-		.state('dash.settings',{
-			url:'settings',
+		.state('settings',{
+			url:'/settings',
+			parent: 'app',
 			views: {
-				'content@': {
+				'': {
+					templateUrl: 'partials/settings-layout.html'
+				},
+				'content@settings': {
 					templateUrl: 'partials/settings.html',
 					controller: 'settingsCtrl'
 				}
 			}
 		})
-		.state('dash.login',{
-			url:'login',
+		.state('login',{
+			url:'/login',
+			parent: 'app',
 			views: {
-				'header@' : {
+				'': {
+					templateUrl: 'partials/login-layout.html'
+				},
+				'header@app':{
 
 				},
-				'sidebar@': {
+				'sidebar@app': {
 
 				},
-				'content@': {
+				'content@login': {
 					templateUrl: 'partials/login.html',
 					controller: 'loginCtrl'
 				}

@@ -30,6 +30,18 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 				'content@dash': {
 					templateUrl: 'partials/dash.html',
 					controller: 'dashCtrl'
+				},
+				'weather@dash':{
+					templateUrl: 'partials/weather-widget.html',
+					controller: 'weatherCtrl'
+				},
+				'calendar@dash':{
+					templateUrl: 'partials/calendar-widget.html',
+					controller: 'calendarCtrl'
+				},
+				'slider@dash':{
+					templateUrl: 'partials/slider-widget.html',
+					controller: 'sliderCtrl'
 				}
 			}
 		})
@@ -50,7 +62,7 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 			url:'/login',
 			parent: 'app',
 			views: {
-				'': {
+				'@app': {
 					templateUrl: 'partials/login-layout.html'
 				},
 				'header@app':{

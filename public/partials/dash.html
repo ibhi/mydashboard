@@ -12,70 +12,19 @@
 
   <!-- Main content -->
   <section class="content">
+    <div ui-view="weather"></div>
+   
     <div class="row">
-      <div class="col-md-3">
-        <div class="box box-warning">
-          <div class="box-header with-border">
-            <h3 class="box-title">{{parseDate(weather.dt) | date:'fullDate'}}</h3>
-            <div class="box-tools pull-right">
-              <!-- Buttons, labels, and many other things can be placed here! -->
-              <!-- Here is a label for example -->
-              <span class="label label-primary">{{weather.name}}</span>
-            </div><!-- /.box-tools -->
-          </div><!-- /.box-header -->
-          <div class="box-body">
-            <!-- <p class="lead">{{weather.name}}</p> -->
-            <p class="lead">
-              <img ng-src="{{getIconImageUrl(weather.weather[0].icon)}}" />
-              <b>{{weather.main.temp | number:1}}&#176;C {{weather.weather[0].main}}</b>
-            </p>
-            <p>
-              {{weather.weather[0].description}}&nbsp;&#126;&nbsp;
-              High: {{weather.main.temp_max}}&#176;C&nbsp;&#126;&nbsp;
-              Low: {{weather.main.temp_min}}&#176;C
-            </p>
-          </div><!-- /.box-body -->
-          <div class="box-footer">
-            <small>
-              Pressure: {{weather.main.pressure}} hPa&nbsp;&#126;&nbsp;
-              Humidity: {{weather.main.humidity}}%
-            </small>
-          </div><!-- box-footer -->
-        </div><!-- /.box -->
+      <!-- Calendar widget -->
+      <div class="col-md-6">
+        <div ui-view="calendar"></div>
       </div>
-      <div class="col-md-3">
-        <weather-panel forecast="forecast" forecast-day="forecast.list[1]"></weather-panel>
-      </div>
-      <div class="col-md-3">
-        <weather-panel forecast="forecast" forecast-day="forecast.list[2]"></weather-panel>
-      </div>
-      <div class="col-md-3">
-        <weather-panel forecast="forecast" forecast-day="forecast.list[3]"></weather-panel>
+      <!-- Slider widget -->
+      <div class="col-md-6">
+        <div ui-view="slider"></div>        
       </div>
     </div>
 
-    <!-- Calendar and Slider widget -->
-    <div class="row">
-      <div class="col-md-6">
-        <div class="box box-primary">
-          <div class="box-body no-padding">
-            <div ui-calendar ng-model="eventSources"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="box box-warning">
-          <div class="box-header with-border">
-            <h3>My Awesome Photos</h3>
-          </div>
-          <div class="box-body no-padding">
-            <!-- <ng-include src="'partials/slider.html'" scope="" onload=""></ng-include> -->
-            <ng-include src="'partials/angular-slider.html'" scope="" onload=""></ng-include>
-          </div>
-        </div>
-        
-      </div>
-    </div>
     <div class="row">
       <div class="col-md-3">
         <button class="btn btn-primary" ng-click="authenticate()" ng-if="visible">Sign in to Google Calender</button>

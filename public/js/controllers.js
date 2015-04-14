@@ -249,19 +249,20 @@ angular.module('dash.controllers',[])
  	
 }])
 
-.controller('loginCtrl', ['$scope', '$firebaseAuth', '$state', '$rootScope', function($scope, $firebaseAuth, $state, $rootScope){
-    var ref = new Firebase('https://ibhi-mydashboard.firebaseio.com/');
-    var auth = $firebaseAuth(ref);
+.controller('loginCtrl', ['$scope', 'authService', '$state', '$rootScope', function($scope, authService, $state, $rootScope){
+    
     $scope.error = null;
 
     $scope.login = function(user){
-        auth.$authWithPassword(user).then(function(authData){
+        authService.login(user).then(function(authData){
             $rootScope.currentUser = authData;
             console.log(authData);
             console.log('User logged in successfully');
             $state.go('settings');
-        }).catch(function(error){
+        },function(error){
             $scope.error = error;
+            $state.go('login');
+            console.log('Login error from server');
         })
     }
 }])

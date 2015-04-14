@@ -81,3 +81,35 @@ angular.module('dash.services',['ngResource'])
 		return false;
 	};
 }])
+
+.factory('initFirebase', [function(){
+  
+    var ref = new Firebase('https://ibhi-mydashboard.firebaseio.com/');
+    return ref;
+  
+
+}])
+
+.factory('Auth', ['$firebaseAuth', 'initFirebase', function($firebaseAuth, initFirebase){
+  
+    return $firebaseAuth(initFirebase);
+  
+}])
+
+.factory('authService', ['$q', '$window', 'Auth', function($q, $window, Auth){
+  function login(user){
+    var defer = $q.defer();
+    
+    Auth.$authWithPassword(user).then(function(authData){
+      $window.sessionStorage['authData'] = JSON.stringify(authData);
+      defer.resolve(authData);
+    }).catch(function(error){
+      defer.reject(error);
+    });
+    return defer.promise;
+  }
+
+  return{
+    login: login
+  }
+}])

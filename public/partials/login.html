@@ -5,14 +5,16 @@
      </div><!-- /.login-logo -->
      <div class="login-box-body">
        <p class="login-box-msg">Sign in to start your session</p>
-       <form ng-submit="login(_user)">
-         <div class="form-group has-feedback">
-           <input type="text" class="form-control" placeholder="Email" ng-model="_user.email"/>
+       <form name="loginForm"ng-submit="login(_user)" novalidate>
+         <div class="form-group" ng-class="{'has-error': loginForm.email.$invalid && !loginForm.email.$pristine}">
+           <input type="email" name="email" class="form-control" placeholder="Email" ng-model="_user.email" ng-model-options="{ updateOn: 'mousedown blur' }"  required/>
            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+           <p ng-show="loginForm.email.$invalid && !loginForm.email.$pristine" class="help-block">Enter a valid email.</p>
          </div>
-         <div class="form-group has-feedback">
-           <input type="password" class="form-control" placeholder="Password" ng-model="_user.password" />
+         <div class="form-group" ng-class="{'has-error': loginForm.password.$invalid && !loginForm.password.$pristine}">
+           <input type="password" name="password" class="form-control" placeholder="Password" ng-model="_user.password" required/>
            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+           <p ng-show="loginForm.password.$invalid && !loginForm.password.$pristine" class="help-block">Enter a valid password.</p>
          </div>
          <div class="row">
            <div class="col-xs-8">    
@@ -23,7 +25,7 @@
              </div>                        
            </div><!-- /.col -->
            <div class="col-xs-4">
-             <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+             <button type="submit" class="btn btn-primary btn-block btn-flat" ng-disabled="loginForm.$invalid">Sign In</button>
            </div><!-- /.col -->
          </div>
        </form>

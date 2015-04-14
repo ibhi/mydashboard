@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox'])
+angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox','firebase'])
 
 .config(function($stateProvider, $urlRouterProvider, DropboxProvider){
-	$urlRouterProvider.otherwise("/dash");	
+	$urlRouterProvider.otherwise("/login");	
 
 	$stateProvider
 		.state('app',{
@@ -18,6 +18,9 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 				'sidebar@app': {
 					templateUrl: 'partials/sidebar.html'
 				}
+			},
+			data: {
+				requireLogin: true
 			}
 		})
 		.state('dash',{
@@ -75,19 +78,28 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 					templateUrl: 'partials/login.html',
 					controller: 'loginCtrl'
 				}
+			},
+			data: {
+				requireLogin: false
 			}
 		});
 
 	DropboxProvider.config('vb60si76xhcnr42', 'http://localhost:3000/oauth_receiver.html');	
 })
 
-.run(function($rootScope, $location){
+.run(function($rootScope, $state){
 	// $rootScope.currentLocation = $location;
 	// console.log($rootScope.currentLocation.path());
 	$rootScope.$on('$stateChangeStart', 
 		function(event, toState, toParams, fromState, fromParams){
-			$rootScope.currentLocation = toState.name;
-			console.log(toState);
+			var requireLogin = toState.data.requireLogin;
+			if(requireLogin && typeof $rootScope.currentUser === 'undefined'){
+				event.preventDefault();
+				$state.go('login');
+			}
+			
+			// $rootScope.currentLocation = toState.name;
+			// console.log(toState);
 	})
 });
 

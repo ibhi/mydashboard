@@ -249,8 +249,21 @@ angular.module('dash.controllers',[])
  	
 }])
 
-.controller('loginCtrl', ['$scope', function($scope){
+.controller('loginCtrl', ['$scope', '$firebaseAuth', '$state', '$rootScope', function($scope, $firebaseAuth, $state, $rootScope){
+    var ref = new Firebase('https://ibhi-mydashboard.firebaseio.com/');
+    var auth = $firebaseAuth(ref);
+    $scope.error = null;
 
+    $scope.login = function(user){
+        auth.$authWithPassword(user).then(function(authData){
+            $rootScope.currentUser = authData;
+            console.log(authData);
+            console.log('User logged in successfully');
+            $state.go('settings');
+        }).catch(function(error){
+            $scope.error = error;
+        })
+    }
 }])
 
 .controller('settingsCtrl', ['$scope', 'setLocation', 'checkLocation', 'getLocationSetting', function($scope, setLocation, checkLocation, getLocationSetting){

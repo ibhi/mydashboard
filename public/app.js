@@ -13,7 +13,8 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 					templateUrl: 'partials/layout.html'
 				},
 				'header@app': {
-					templateUrl: 'partials/header.html'
+					templateUrl: 'partials/header.html',
+					controller: 'headerCtrl'
 				},
 				'sidebar@app': {
 					templateUrl: 'partials/sidebar.html'
@@ -25,7 +26,8 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 		})
 		.state('dash',{
 			url: '/dash',
-			parent: 'app', 
+			parent: 'app',
+			controller: 'dashCtrl',
 			views: {
 				'': {
 					templateUrl: 'partials/dash-layout.html'
@@ -46,6 +48,11 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 					templateUrl: 'partials/slider-widget.html',
 					controller: 'sliderCtrl'
 				}
+			},
+			resolve: {  
+					"currentAuth": ["Auth", function(Auth) {			        	
+						return Auth.$requireAuth();
+			      }]
 			}
 		})
 		.state('settings',{
@@ -59,6 +66,14 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 					templateUrl: 'partials/settings.html',
 					controller: 'settingsCtrl'
 				}
+			},
+			resolve: {
+			      // controller will not be loaded until $waitForAuth resolves
+			      // Auth refers to our $firebaseAuth wrapper in the example above
+			      "currentAuth": ["Auth", function(Auth) {
+			        // $waitForAuth returns a promise so the resolve waits for it to complete
+			        return Auth.$requireAuth();
+			      }]
 			}
 		})
 		.state('login',{
@@ -88,18 +103,23 @@ angular.module('dash',['ui.router','dash.controllers','dash.services','dash.dire
 })
 
 .run(function($rootScope, $state){
-	// $rootScope.currentLocation = $location;
-	// console.log($rootScope.currentLocation.path());
-	$rootScope.$on('$stateChangeStart', 
-		function(event, toState, toParams, fromState, fromParams){
-			var requireLogin = toState.data.requireLogin;
-			if(requireLogin && typeof $rootScope.currentUser === 'undefined'){
-				event.preventDefault();
-				$state.go('login');
-			}
-			
-			// $rootScope.currentLocation = toState.name;
-			// console.log(toState);
-	})
+	
+	// $rootScope.$on('$stateChangeStart', 
+	// 	function(event, toState, toParams, fromState, fromParams){
+	// 		var requireLogin = toState.data.requireLogin;
+	// 		if(requireLogin && typeof $rootScope.currentUser === 'undefined'){
+	// 			event.preventDefault();
+	// 			$state.go('login');
+	// 		}
+	// })
+
+	$rootScope.$on("$stateChangeError", function(event, toState, toParams, fromState, fromParams, error) {
+	  // We can catch the error thrown when the $requireAuth promise is rejected
+	  // and redirect the user back to the home page
+	  if (error === "AUTH_REQUIRED") {
+	  	console.log('Probaly auth error, redirecting to login page');
+	    $state.go("login");
+	  }
+	});
 });
 

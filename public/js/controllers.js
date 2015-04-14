@@ -237,7 +237,7 @@ angular.module('dash.controllers',[])
     
 }])
 
-.controller('dashCtrl', ['$scope', function($scope){
+.controller('dashCtrl', ['$scope', 'Auth', '$state', '$rootScope', function($scope, Auth, $state, $rootScope){
 
 	// if (navigator.geolocation) {
  //        navigator.geolocation.getCurrentPosition(function(position){
@@ -246,7 +246,7 @@ angular.module('dash.controllers',[])
  //    } else {
  //        console.log("Geolocation is not supported by this browser.");
  //    }
- 	
+   
 }])
 
 .controller('loginCtrl', ['$scope', 'authService', '$state', '$rootScope', function($scope, authService, $state, $rootScope){
@@ -279,6 +279,19 @@ angular.module('dash.controllers',[])
  	}
 }])
 
-.controller('headerCtrl', ['$scope', function($scope){
-    
+.controller('headerCtrl', ['$scope', 'Auth', '$state',function($scope, Auth, $state){
+    console.log('I am from header controller');
+    Auth.$onAuth(function(authData) {
+        if(authData){
+            console.log("User " + authData.uid + " is logged in with " + authData.provider);
+        }else{
+            console.log('User logged out');
+            $state.go('login');
+        }
+   });
+
+    $scope.logout = function(){
+         console.log('Logout clicked');
+         Auth.$unauth();
+    }
 }])

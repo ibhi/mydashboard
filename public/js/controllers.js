@@ -2,45 +2,44 @@
 
 angular.module('dash.controllers',[])
 
-.controller('weatherCtrl', ['$scope', '$rootScope','openWeatherMap', 'getLocationSetting', function($scope, $rootScope, openWeatherMap, getLocationSetting){
+.controller('weatherCtrl', ['$scope', '$rootScope','openWeatherMap', 'Location', function($scope, $rootScope, openWeatherMap, Location){
     
     $scope.currentTime = moment().format('h:mm a');
-    // getLocationSetting().then(function(loc){
-    //     $scope.loc = loc;
-    //     console.log($scope.loc);
-    // }, function(error){
-    //     console.log('Error getting location '+ error.code);
-    // })
-    getLocationSetting();
+    
+    $scope.location = Location;
 
-    $rootScope.location = 'Chennai';
-    console.log($rootScope.location);
+    // $scope.location.$loaded()
+    //   .then(function() {
+    //     console.log($scope.location.$value);
+    //   })
+    //   .catch(function(err) {
+    //     console.error(err);
+    //   });
 
     $scope.iconBaseUrl = 'http://openweathermap.org/img/w/';
-    // As now $scope.loc is inside a promise I have kept the weather queries inside the $scope.$watch so that whenever the promise is getting resolved
-    // we will have updated $scope.loc value and hence we can query the weather
-    $rootScope.$watch(function(rootScope){
-        return rootScope.location;
+    
+    $scope.$watch(function(scope){
+        return scope.location.$value;
     }, function(newval, oldval){
         $scope.weather = openWeatherMap.queryWeather({
-            location: newval
+            location: newval || 'Chennai'
         });
 
         $scope.forecast = openWeatherMap.queryForecastDaily({
-            location: newval
+            location: newval || 'Chennai'
         });
     });
 
-    $scope.weather = openWeatherMap.queryWeather({
-            location: $rootScope.location
-    });
+    // $scope.weather = openWeatherMap.queryWeather({
+    //         location: $scope.location.$value
+    // });
 
-    $scope.forecast = openWeatherMap.queryForecastDaily({
-            location: $rootScope.location
-    });
+    // $scope.forecast = openWeatherMap.queryForecastDaily({
+    //         location: $scope.location.$value
+    // });
 
-    console.log($scope.weather);
-    console.log($scope.forecast);
+    // console.log($scope.weather);
+    // console.log($scope.forecast);
 
     $scope.getIconImageUrl = function(iconName) {
       return (iconName ? $scope.iconBaseUrl + iconName + '.png' : '');
@@ -275,15 +274,34 @@ angular.module('dash.controllers',[])
     }
 }])
 
-.controller('settingsCtrl', ['$scope', 'setLocation', 'checkLocation', 'getLocationSetting', function($scope, setLocation, checkLocation, getLocationSetting){
+.controller('settingsCtrl', ['$scope', 'Location', 'checkLocation', function($scope, Location, checkLocation){
 
-	if(checkLocation()){
-		$scope.message = "Location currently set is " + getLocationSetting();
-	}
+    $scope.location = Location;
 
-	$scope.setLocation = function(){
- 		setLocation($scope.location || 'Chennai');
- 		$scope.success="Your settings saved successfully";
+
+	// if(checkLocation()){
+	// 	$scope.message = "Location currently set is " + $scope.location.$value;
+	// }
+    $scope.location.$loaded()
+      .then(function() {
+        console.log($scope.location.$value);
+        $scope.message = "Location currently set is " + $scope.location.$value;
+        })
+      .catch(function(err) {
+        console.error(err);
+      }
+    );    
+
+	$scope.setLocation = function(loc){
+        $scope.location.$value = loc || 'Chennai';
+        $scope.location.$save().then(function(location){
+            console.log('Your location saved successfully to firebase');
+            $scope.success="Your settings saved successfully";
+        }, function(error){
+            console.log(error);
+        })
+ 		// setLocation($scope.location || 'Chennai');
+ 		
  	}
 }])
 

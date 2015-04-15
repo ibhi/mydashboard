@@ -53,58 +53,18 @@ angular.module('dash.services',['ngResource'])
     )
 }])
 
-.factory('getLocationSetting', ['initFirebase', 'Auth', '$q', '$rootScope',  function(initFirebase, Auth, $q, $rootScope){
-	return function(){
-    // var defer = $q.defer();
-    var ref = initFirebase;
+.factory('Location', ['initFirebase', 'Auth', '$q', '$rootScope', '$firebaseObject',function(initFirebase, Auth, $q, $rootScope, $firebaseObject){
+    var ref = initFirebase.child('users');
     var authData = Auth.$getAuth();
     var uid = authData.uid;
-    ref.child('users').child(uid).on('value', function(snapshot){
-      console.log(snapshot.val().location);
-      $rootScope.location = snapshot.val().location;
-      // return defer.resolve(snapshot.val().location);
-      // return snapshot.val().location;
-    }, function (errorObject) {
-        console.log("The read failed: " + errorObject.code);
-        rootScope.location = "Chennai";
-        // return defer.reject(errorObject);
-    });
-    // return defer.promise;
-		// if(localStorage.getItem('location')){
-		// 	console.log(localStorage.getItem('location'));
-		// 	return localStorage.getItem('location')
-		// }
-		// return 'Chennai';
-	};
+    return $firebaseObject(ref.child(uid).child('location'));
 }])
 
-.factory('setLocation', ['initFirebase', 'Auth', function(initFirebase, Auth ){
-	return function(location){
-		if(location){
-      var ref = initFirebase;
-      var authData = Auth.$getAuth();
-      var uid = authData.uid;
-      ref.child('users').child(uid).update({'location': location}, function(error){
-        if(error){
-          console.log('Error updating firebase ' + error);
-        }
-        console.log('Location successfully updated in fire base');
-        // localStorage.setItem('location', location);
-        // console.log('Location set in local storage');
-      });
-
-      // ref.child('users').child.(uid).on('value', function(snapshot){
-      //   console.log(snapshot.val();)
-      // })
-			
-		}
-	};
-}])
-
-.factory('checkLocation', [function(){
+.factory('checkLocation', ['Location', function(Location){
 	return function(){
-		var location = localStorage.getItem('location');
-		if(location){
+		var location = Location;
+		if(location.$value !== null || location.$value !== ""){
+      console.log()
 			return true;
 		}
 		return false;

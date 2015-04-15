@@ -12,11 +12,11 @@
 			    </div><!-- /.box-tools -->
 			  </div><!-- /.box-header -->
 			  <div class="box-body">
-			  	<form ng-submit="setLocation()">
+			  	<form ng-submit="setLocation(loc)">
 		            <div class="form-group">
 						<p>{{message}}</p>
 			            <label for="location">Enter Location</label>
-			            <input type="text" class="form-control" ng-model ="location" id="location" placeholder="Enter location">
+			            <input type="text" class="form-control" ng-model ="loc" id="location" placeholder="Enter location">
 		            </div>
 		            <p class="text-info">{{success}}</p>
 		            <input type="submit" class="btn btn-default">

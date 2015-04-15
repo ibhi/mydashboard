@@ -2,6 +2,11 @@
 
 <div class="box box-primary">
 	<div class="box-body no-padding">
-		<div ui-calendar ng-model="eventSources"></div>
+
+		<div class="center-block" ng-if="visible">
+			<br></br>
+			<button type="button" class="btn btn-primary" ng-click="authGcal()" style="margin-left: auto; margin-right: auto;">Signin to Google Calendar</button>
+		</div>
+		<div ui-calendar ng-model="eventSources" ng-if="!visible"></div>
 	</div>
 </div>

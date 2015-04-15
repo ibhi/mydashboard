@@ -60,17 +60,6 @@ angular.module('dash.services',['ngResource'])
     return $firebaseObject(ref.child(uid).child('location'));
 }])
 
-.factory('checkLocation', ['Location', function(Location){
-	return function(){
-		var location = Location;
-		if(location.$value !== null || location.$value !== ""){
-      console.log()
-			return true;
-		}
-		return false;
-	};
-}])
-
 .factory('initFirebase', [function(){
   
     var ref = new Firebase('https://ibhi-mydashboard.firebaseio.com/');

@@ -62,7 +62,7 @@ angular.module('dash.controllers',[])
     $scope.visible = true;
     $scope.eventSources = [];
 
-    $scope.authenticate = function(){
+    $scope.authGcal = function(){
         gapi.auth.authorize({
             'client_id': CLIENT_ID,
             'scope': SCOPES,
@@ -190,6 +190,7 @@ angular.module('dash.controllers',[])
         });
     }
 
+    // Todo: Dropbox.ApiError is not defined in my dropbox provider. However it is available in original dropbox.js client
     var showError = function(error) {
         switch (error.status) {
         case Dropbox.ApiError.INVALID_TOKEN:
@@ -274,14 +275,11 @@ angular.module('dash.controllers',[])
     }
 }])
 
-.controller('settingsCtrl', ['$scope', 'Location', 'checkLocation', function($scope, Location, checkLocation){
+.controller('settingsCtrl', ['$scope', 'Location', function($scope, Location){
 
     $scope.location = Location;
 
 
-	// if(checkLocation()){
-	// 	$scope.message = "Location currently set is " + $scope.location.$value;
-	// }
     $scope.location.$loaded()
       .then(function() {
         console.log($scope.location.$value);
@@ -300,7 +298,6 @@ angular.module('dash.controllers',[])
         }, function(error){
             console.log(error);
         })
- 		// setLocation($scope.location || 'Chennai');
  		
  	}
 }])

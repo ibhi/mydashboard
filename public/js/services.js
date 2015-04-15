@@ -53,21 +53,23 @@ angular.module('dash.services',['ngResource'])
     )
 }])
 
-.factory('getLocationSetting', ['initFirebase', 'Auth', '$q', function(initFirebase, Auth, $q){
+.factory('getLocationSetting', ['initFirebase', 'Auth', '$q', '$rootScope',  function(initFirebase, Auth, $q, $rootScope){
 	return function(){
-    var defer = $q.defer();
+    // var defer = $q.defer();
     var ref = initFirebase;
     var authData = Auth.$getAuth();
     var uid = authData.uid;
     ref.child('users').child(uid).on('value', function(snapshot){
       console.log(snapshot.val().location);
-      return defer.resolve(snapshot.val().location);
+      $rootScope.location = snapshot.val().location;
+      // return defer.resolve(snapshot.val().location);
       // return snapshot.val().location;
     }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
-        return defer.reject(errorObject);
+        rootScope.location = "Chennai";
+        // return defer.reject(errorObject);
     });
-    return defer.promise;
+    // return defer.promise;
 		// if(localStorage.getItem('location')){
 		// 	console.log(localStorage.getItem('location'));
 		// 	return localStorage.getItem('location')
@@ -128,7 +130,7 @@ angular.module('dash.services',['ngResource'])
     var defer = $q.defer();
     
     Auth.$authWithPassword(user).then(function(authData){
-      $window.sessionStorage['authData'] = JSON.stringify(authData);
+      // $window.sessionStorage['authData'] = JSON.stringify(authData);
       defer.resolve(authData);
     }).catch(function(error){
       defer.reject(error);

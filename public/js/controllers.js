@@ -2,23 +2,25 @@
 
 angular.module('dash.controllers',[])
 
-.controller('weatherCtrl', ['$scope', 'openWeatherMap', 'getLocationSetting', function($scope, openWeatherMap, getLocationSetting){
+.controller('weatherCtrl', ['$scope', '$rootScope','openWeatherMap', 'getLocationSetting', function($scope, $rootScope, openWeatherMap, getLocationSetting){
     
     $scope.currentTime = moment().format('h:mm a');
-    getLocationSetting().then(function(loc){
-        $scope.loc = loc;
-    }, function(error){
-        console.log('Error getting location '+ error.code);
-    })
+    // getLocationSetting().then(function(loc){
+    //     $scope.loc = loc;
+    //     console.log($scope.loc);
+    // }, function(error){
+    //     console.log('Error getting location '+ error.code);
+    // })
+    getLocationSetting();
 
-    $scope.loc = 'Chennai';
-    console.log($scope.loc);
+    $rootScope.location = 'Chennai';
+    console.log($rootScope.location);
 
     $scope.iconBaseUrl = 'http://openweathermap.org/img/w/';
     // As now $scope.loc is inside a promise I have kept the weather queries inside the $scope.$watch so that whenever the promise is getting resolved
     // we will have updated $scope.loc value and hence we can query the weather
-    $scope.$watch(function(scope){
-        return scope.loc;
+    $rootScope.$watch(function(rootScope){
+        return rootScope.location;
     }, function(newval, oldval){
         $scope.weather = openWeatherMap.queryWeather({
             location: newval
@@ -30,11 +32,11 @@ angular.module('dash.controllers',[])
     });
 
     $scope.weather = openWeatherMap.queryWeather({
-            location: $scope.loc
+            location: $rootScope.location
     });
 
     $scope.forecast = openWeatherMap.queryForecastDaily({
-            location: $scope.loc
+            location: $rootScope.location
     });
 
     console.log($scope.weather);

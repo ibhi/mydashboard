@@ -50,7 +50,7 @@ angular.module('dash.services',['ngResource'])
           }
         }
       }
-    )
+    );
 }])
 
 .factory('Location', ['initFirebase', 'Auth', '$q', '$rootScope', '$firebaseObject',function(initFirebase, Auth, $q, $rootScope, $firebaseObject){
@@ -89,5 +89,5 @@ angular.module('dash.services',['ngResource'])
 
   return{
     login: login
-  }
-}])
+  };
+}]);

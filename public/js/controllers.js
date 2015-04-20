@@ -270,7 +270,7 @@ angular.module('dash.controllers',[])
         },function(error){
             $scope.error = error;
             $state.go('login');
-            console.log('Login error from server');
+            console.log(error);
         })
     }
 }])

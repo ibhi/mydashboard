@@ -1,4 +1,4 @@
-'use strict';
+// 'use strict';
 
 angular.module('dash.controllers',[])
 
@@ -181,33 +181,48 @@ angular.module('dash.controllers',[])
                 console.log(imgSize);
                 // The below lines of code will resize the image arraybuffer to the desired height or width using pica library
                 var srcData = new Uint8Array(data);
-                window.pica.WW = false;
+                // console.log(srcData);
+                // window.pica.WW = false;
                 var imgData = window.pica.resizeBuffer({
                     src: srcData,
                     width: imgSize.width,
                     height: imgSize.height,
-                    toHeigth: 500,
-                    toWidth: 1000,
+                    toHeight: 500,
+                    toWidth: 1000
                 }, function(error, output){
                     if(error){
                         console.log(error);
+                        return;
                     }
 
-                    console.log();
+                    console.log('Success');
+                    // console.log(output);
+                    // prepareBlobs(output);
                 });
-                prepareBlobs(data);
+                // console.log(imgData);
+                imgData.onmessage = function(e){
+                    console.log('I m in on message');
+                    console.log(e.data);
+                    prepareBlobs(e.data.output);
+                }
+                
             }, function(error){
                 console.log(error);
                 showError(error);
             });
-        };
+        }
     };
 
     var prepareBlobs = function(data){
-        blobUtil.arrayBufferToBlob(data,'image/jpeg').then(function(blob){
+        // var blob = new Blob( [ data ], { type: 'image/jpeg' } );
+        // var urlCreator = window.URL || window.webkitURL;
+        // var imageUrl = urlCreator.createObjectURL( blob );
+        // $scope.slides.push({image: imageUrl});
+        // console.log($scope.slides);
+        blobUtil.createBlob(data,'image/jpeg').then(function(blob){
             var imageUrl = blobUtil.createObjectURL(blob);
             $scope.slides.push({image: imageUrl});
-            console.log($scope.slides)
+            console.log($scope.slides);
         }, function(error){
             console.log(error);
         });

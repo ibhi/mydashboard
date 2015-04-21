@@ -117,8 +117,8 @@ angular.module('dash.controllers',[])
                 url: entry.htmlLink,
                 location: entry.location,
                 description: entry.description
-            })
-        })
+            });
+        });
         console.log($scope.events);
         $scope.eventSources = [$scope.events];
     }
@@ -172,16 +172,39 @@ angular.module('dash.controllers',[])
         for (var i = 0; i < entries_stat.length; i++) {
             var filePath = entries_stat[i].path;
             Dropbox.readFile(filePath, {arrayBuffer: true}).then(function(data, stat, rangeinfo){
+                // The below lines of code will extract the source image size from array buffer using exifparser node library
+                var parser = window.ExifParser.create(data);
+                parser.enableImageSize(true);
+                parser.enableReturnTags(false);
+                var result = parser.parse();
+                var imgSize = result.getImageSize();
+                console.log(imgSize);
+                // The below lines of code will resize the image arraybuffer to the desired height or width using pica library
+                var srcData = new Uint8Array(data);
+                window.pica.WW = false;
+                var imgData = window.pica.resizeBuffer({
+                    src: srcData,
+                    width: imgSize.width,
+                    height: imgSize.height,
+                    toHeigth: 500,
+                    toWidth: 1000,
+                }, function(error, output){
+                    if(error){
+                        console.log(error);
+                    }
+
+                    console.log();
+                });
                 prepareBlobs(data);
             }, function(error){
                 console.log(error);
                 showError(error);
-            })
+            });
         };
     };
 
     var prepareBlobs = function(data){
-        blobUtil.arrayBufferToBlob(data,"image/jpeg").then(function(blob){
+        blobUtil.arrayBufferToBlob(data,'image/jpeg').then(function(blob){
             var imageUrl = blobUtil.createObjectURL(blob);
             $scope.slides.push({image: imageUrl});
             console.log($scope.slides)

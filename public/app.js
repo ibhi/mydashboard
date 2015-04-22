@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox','firebase'])
+angular.module('dash',['ui.router','dash.controllers','dash.services','dash.directives', 'ui.calendar','ui.bootstrap', 'Dropbox','firebase', 'images-resizer'])
 
 .config(function($stateProvider, $urlRouterProvider, DropboxProvider){
-	$urlRouterProvider.otherwise("/login");	
+	$urlRouterProvider.otherwise('/login');	
 
 	$stateProvider
 		.state('app',{

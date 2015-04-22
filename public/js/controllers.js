@@ -1,4 +1,4 @@
-// 'use strict';
+'use strict';
 
 angular.module('dash.controllers',[])
 
@@ -140,7 +140,7 @@ angular.module('dash.controllers',[])
     $scope.eventSources = [$scope.events];
 }])
 
-.controller('sliderCtrl', ['$scope', 'Dropbox', function($scope, Dropbox){
+.controller('sliderCtrl', ['$scope', 'Dropbox','resizeService' ,function($scope, Dropbox, resizeService){
     
 
     // Slider
@@ -180,31 +180,7 @@ angular.module('dash.controllers',[])
                 var imgSize = result.getImageSize();
                 console.log(imgSize);
                 // The below lines of code will resize the image arraybuffer to the desired height or width using pica library
-                var srcData = new Uint8Array(data);
-                // console.log(srcData);
-                // window.pica.WW = false;
-                var imgData = window.pica.resizeBuffer({
-                    src: srcData,
-                    width: imgSize.width,
-                    height: imgSize.height,
-                    toHeight: 500,
-                    toWidth: 1000
-                }, function(error, output){
-                    if(error){
-                        console.log(error);
-                        return;
-                    }
-
-                    console.log('Success');
-                    // console.log(output);
-                    // prepareBlobs(output);
-                });
-                // console.log(imgData);
-                imgData.onmessage = function(e){
-                    console.log('I m in on message');
-                    console.log(e.data);
-                    prepareBlobs(e.data.output);
-                }
+                prepareBlobs(data);
                 
             }, function(error){
                 console.log(error);
@@ -214,12 +190,22 @@ angular.module('dash.controllers',[])
     };
 
     var prepareBlobs = function(data){
-        // var blob = new Blob( [ data ], { type: 'image/jpeg' } );
-        // var urlCreator = window.URL || window.webkitURL;
-        // var imageUrl = urlCreator.createObjectURL( blob );
-        // $scope.slides.push({image: imageUrl});
-        // console.log($scope.slides);
-        blobUtil.createBlob(data,'image/jpeg').then(function(blob){
+        
+        blobUtil.arrayBufferToBlob(data,'image/jpeg').then(function(blob){
+            blobUtil.blobToBase64String(blob).then(function (base64String) {
+                console.log(base64String);
+                // resizeService.resizeImage(base64String, {height: 760, width: 1000}, function(err, image){
+                //     if(err) {
+                //         console.error(err);
+                //         return;
+                //     }
+
+                //     console.log(image);
+                // });
+            }).catch(function (err) {
+                console.log('Error in coverting blob to base64');
+                console.error(err);
+            });
             var imageUrl = blobUtil.createObjectURL(blob);
             $scope.slides.push({image: imageUrl});
             console.log($scope.slides);

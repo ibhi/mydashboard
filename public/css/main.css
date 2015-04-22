@@ -91,3 +91,7 @@ body{
 	background:url('../img/blur-bg.jpg') #D28E6A no-repeat;
 }
 
+.carousel-inner>.item>img{
+  max-height: 800px;
+  max-width: 1000px;
+}

@@ -24,6 +24,7 @@
     "angular-bootstrap": "~0.12.1",
     "moment": "~2.10.2",
     "angularfire": "~1.0.0",
-    "firebase": "~2.2.4"
+    "firebase": "~2.2.4",
+    "angular-images-resizer": "~0.9.1"
   }
 }
